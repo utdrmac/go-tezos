@@ -16,19 +16,20 @@ Go Tezos is split into multiple services underneath to help organize it's functi
 To understand how Go Tezos works, take a look at the GoTezos Structure: 
 ```
 type GoTezos struct {
-	client    *client
-	Constants NetworkConstants
-	Block     *BlockService
-	SnapShot  *SnapShotService
-	Cycle     *CycleService
-	Account   *AccountService
-	Delegate  *DelegateService
-	Network   *NetworkService
-	Operation *OperationService
-	Contract  *ContractService
+	Client    tzc.TezosClient
+	Constants network.Constants
+	Block     block.TezosBlockService
+	Snapshot  snapshot.TezosSnapshotService
+	Cycle     cycle.TezosCycleService
+	Account   account.TezosAccountService
+	Delegate  delegate.TezosDelegateService
+	Network   network.TezosNetworkService
+	Operation operations.TezosOperationsService
+	Contract  contracts.TezosContractsService
+	Node      node.TezosNodeService
 }
 ```
-You can see GoTezos is a wrapper for an http client, and services such as `block`,  `SnapShot`, `Cycle`, `Account`, `Delegate`, `Network`, `Operation`, and `Contract`.
+You can see GoTezos is a wrapper for several services such as `block`,  `Snapshot`, `Cycle`, `Account`, `Delegate`, `Network`, `Operation`, `Node`, and `Contract`.
 
 The below examples assume you have go-tezos imported as follows:
 ```
@@ -37,25 +38,11 @@ import (
 )
 ```
 ### Initializing Go Tezos
-Currently you must initialize with `http://` or `https://`
 ```
-gt, err := NewGoTezos("http://127.0.0.1:8732")
+gt, err := NewGoTezos("127.0.0.1:8732")
 if err != nil {
 	fmt.Printf("could not connect to network: %v", err)
 }
-
-```
-
-### Setting Your Own HTTP Client
-If you don't want to use Go Tezos's default HTTP Client you can set your own. 
-```
-var client *http.Client
-
-.....
-.....
-.....
-
-gt.SetHTTPClient(client)
 
 ```
 
@@ -91,21 +78,11 @@ fmt.Println(block)
 ### Getting A Snapshot At A Specific Cycle
 This function will get a snapshot at a specific cycle (int).
 ```
-snapshot, err := gt.SnapShot.Get(50)
+snapshot, err := gt.Snapshot.Get(50)
 if err != nil {
 	fmt.Println(err)
 }
 fmt.Println(snapshot)
-```
-
-### Getting All Known Snapshots
-This function will get all known snapshots to the network.
-```
-snapshots, err := gt.SnapShot.GetAll()
-if err != nil {
-	fmt.Println(err)
-}
-fmt.Println(snapshots)
 ```
 
 ## Accounts
