@@ -1,4 +1,4 @@
-module github.com/goat-systems/go-tezos/v2
+module github.com/utdrmac/go-tezos/v2
 
 go 1.14
 
